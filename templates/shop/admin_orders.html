@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+{% load order_filters %}
+
+{% block title %}Admin - Orders - TechStore</div>
+{% endblock %}
+
+{% block content %}
+<div style="min-height: calc(100vh - 200px);">
+    <style>
+        .orders-title {
+            color: #ffffff;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            font-weight: 600;
+        }
+
+        .table {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+        }
+
+        .table th {
+            color: #ffffff;
+            font-weight: 600;
+            border-color: #444;
+        }
+
+        .table td {
+            color: #ffffff;
+            border-color: #444;
+        }
+
+        .btn-view-details {
+            background: linear-gradient(135deg, var(--primary-purple) 0%, var(--dark-purple) 100%);
+            border: none;
+            color: #ffffff;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            font-weight: 500;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-view-details:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+            color: #ffffff;
+        }
+
+        .order-detail-label {
+            color: #ffffff;
+            font-weight: 600;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+        }
+
+        .order-detail-value {
+            color: #cccccc;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+        }
+
+        .stats-number {
+            color: var(--primary-purple);
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+        }
+
+        .stats-label {
+            color: #999;
+            font-size: 0.9rem;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+        }
+    </style>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="orders-title">All Orders</h1>
+        <a href="{% url 'home' %}" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+
+    {% if orders %}
+    <div class="table-responsive">
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Total Amount</th>
+                    <th>Items</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>#{{ order.id }}</td>
+                    <td>{{ order.user.username }}</td>
+                    <td>{{ order.created_at|date:"M d, Y H:i" }}</td>
+                    <td class="price">${{ order.total_amount }}</td>
+                    <td>{{ order.items.count }} item{{ order.items.count|pluralize }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-view-details" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#order{{ order.id }}" aria-expanded="false">
+                            <i class="fas fa-eye"></i> View Details
+                        </button>
+                    </td>
+                </tr>
+                <tr class="collapse" id="order{{ order.id }}">
+                    <td colspan="6" style="padding: 0;">
+                        <div class="card" style="margin: 1rem;">
+                            <div class="card-body">
+                                <h5 class="card-title"
+                                    style="color: #ffffff; font-family: 'Inter', 'Segoe UI', sans-serif;">
+                                    Order #{{ order.id }} Details
+                                </h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p class="order-detail-label">Customer:
+                                            <span class="order-detail-value">{{ order.user.username }}</span>
+                                        </p>
+                                        <p class="order-detail-label">Email:
+                                            <span class="order-detail-value">{{ order.user.email }}</span>
+                                        </p>
+                                        <p class="order-detail-label">Order Date:
+                                            <span class="order-detail-value">{{ order.created_at|date:"F d, Y H:i:s"
+                                                }}</span>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="order-detail-label">Total Amount:
+                                            <span class="price">${{ order.total_amount }}</span>
+                                        </p>
+                                        <p class="order-detail-label">Number of Items:
+                                            <span class="order-detail-value">{{ order.items.count }}</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr style="border-color: #444;">
+                                <h6
+                                    style="color: #ffffff; font-family: 'Inter', 'Segoe UI', sans-serif; font-weight: 600;">
+                                    Order Items:
+                                </h6>
+                                <table class="table table-sm table-dark">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Quantity</th>
+                                            <th>Price</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in order.items.all %}
+                                        <tr>
+                                            <td>{{ item.product.name }}</td>
+                                            <td>{{ item.quantity }}</td>
+                                            <td>${{ item.price }}</td>
+                                            <td>${{ item.quantity|multiply:item.price }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"
+                    style="color: #ffffff; font-family: 'Inter', 'Segoe UI', sans-serif; font-weight: 600;">
+                    Order Statistics
+                </h5>
+                <div class="row text-center mt-4">
+                    <div class="col-md-4">
+                        <div class="stats-number">{{ orders.count }}</div>
+                        <div class="stats-label">Total Orders</div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stats-number">${{ orders|sum_total }}</div>
+                        <div class="stats-label">Total Revenue</div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stats-number">${{ orders|avg_total }}</div>
+                        <div class="stats-label">Average Order Value</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> No orders have been placed yet.
+    </div>
+    {% endif %}
+    </div>
+{% endblock %}

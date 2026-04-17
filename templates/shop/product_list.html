@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}Products - TechStore{% endblock %}
+
+{% block content %}
+<style>
+    .filter-section .form-control,
+    .filter-section .form-select {
+        color: #ffffff !important;
+        background-color: var(--bg-secondary);
+        border: 1px solid #444;
+    }
+
+    .filter-section .form-control::placeholder {
+        color: #888;
+    }
+
+    .filter-section .form-control:focus,
+    .filter-section .form-select:focus {
+        color: #ffffff !important;
+        background-color: var(--bg-secondary);
+        border-color: var(--primary-purple);
+    }
+
+    .filter-section .form-select option {
+        background-color: var(--bg-secondary);
+        color: #ffffff;
+    }
+</style>
+
+<h1 class="mb-4">Our Products</h1>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="filter-section">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" name="search" class="form-control" placeholder="Search products..."
+                        value="{{ search_query|default:'' }}">
+                </div>
+                <div class="col-md-3">
+                    <select name="category" class="form-select">
+                        <option value="">All Categories</option>
+                        {% for category in categories %}
+                        <option value="{{ category.slug }}" {% if current_category == category.slug %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="sort" class="form-select">
+                        <option value="-created_at" {% if sort_by == '-created_at' %}selected{% endif %}>Newest</option>
+                        <option value="price" {% if sort_by == 'price' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="-price" {% if sort_by == '-price' %}selected{% endif %}>Price: High to Low</option>
+                        <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name: A-Z</option>
+                        <option value="-name" {% if sort_by == '-name' %}selected{% endif %}>Name: Z-A</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    {% for product in products %}
+    <div class="col-md-3 mb-4">
+        <div class="card h-100">
+            {% if product.image_url %}
+            <img src="{{ product.image_url }}" class="product-img card-img-top" alt="{{ product.name }}">
+            {% else %}
+            <div class="product-img card-img-top d-flex align-items-center justify-content-center">
+                <i class="fas fa-laptop fa-4x" style="color: var(--primary-purple);"></i>
+            </div>
+            {% endif %}
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text flex-grow-1">{{ product.description|truncatewords:10 }}</p>
+                <div class="mb-2">
+                    <span class="badge">{{ product.category.name }}</span>
+                    <span class="badge bg-success">{{ product.stock }} in stock</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-auto">
+                    <span class="price">${{ product.price }}</span>
+                    <a href="{% url 'product_detail' product.slug %}" class="btn btn-primary btn-sm">View</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">No products found.</div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
