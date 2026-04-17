@@ -5,10 +5,11 @@ A modern, full-stack e-commerce website for tech products built with Django and 
 ## Features
 
 - **User Authentication**: Register, login, and logout functionality
-- **Product Catalog**: Browse 50+ tech products across 10 categories
+- **Product Catalog**: Browse 60+ tech products across 10 categories
 - **Advanced Filtering**: Search, filter by category, and sort products
 - **Shopping Cart**: Add, update, and remove items from cart
 - **Checkout System**: Complete orders with automatic stock management
+- **Admin Orders Page**: View all orders with statistics (staff only)
 - **Responsive Design**: Modern UI with black and purple theme
 - **Admin Panel**: Full admin access for product and order management
 
@@ -53,8 +54,14 @@ A modern, full-stack e-commerce website for tech products built with Django and 
    python manage.py makemigrations
    python manage.py migrate
    
-   # Populate database
+   # Populate database with products and categories
    python manage.py populate_db
+   
+   # Add product images
+   python manage.py add_images
+   
+   # Create test users (optional)
+   python manage.py create_test_users
    ```
 
 4. **Start the development server**:
@@ -71,6 +78,11 @@ A modern, full-stack e-commerce website for tech products built with Django and 
 ### Admin User
 - **Username**: admin
 - **Password**: admin123
+
+### Test Users (if created)
+- **Customer 1**: john / password123
+- **Customer 2**: jane / password123
+- **Staff User**: staff / password123
 
 ## Usage
 
@@ -151,10 +163,11 @@ techstore/
 - Subtotal calculations
 
 ### Product Management
-- 50+ pre-loaded products
+- 60+ pre-loaded products
 - Category-based organization
 - Stock tracking
 - Price management
+- Product images from Unsplash
 
 ### Checkout
 - Order creation with items
