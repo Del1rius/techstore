@@ -18,6 +18,7 @@ class Product(models.Model):
     slug = models.SlugField(unique=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
     description = models.TextField()
+    specifications = models.TextField(blank=True, help_text='Product specifications, one per line')
     price = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.IntegerField(default=0)
     image_url = models.URLField(blank=True)
@@ -29,6 +30,12 @@ class Product(models.Model):
     
     def __str__(self):
         return self.name
+    
+    def get_specifications_list(self):
+        """Return specifications as a list"""
+        if self.specifications:
+            return [spec.strip() for spec in self.specifications.split('\n') if spec.strip()]
+        return []
 
 
 class Cart(models.Model):

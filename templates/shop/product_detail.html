@@ -25,6 +25,17 @@
             </p>
             <p class="lead mb-4">{{ product.description }}</p>
 
+            {% if product.specifications %}
+            <div class="mb-4">
+                <h5 style="color: #ffffff; font-weight: 600; margin-bottom: 1rem;">Key Specifications:</h5>
+                <ul style="color: #cccccc; line-height: 1.8;">
+                    {% for spec in product.get_specifications_list %}
+                    <li>{{ spec }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
             <div class="mb-4">
                 <span class="price">${{ product.price }}</span>
             </div>
@@ -61,5 +72,5 @@
             </div>
         </div>
     </div>
-    </div>
+</div>
 {% endblock %}
