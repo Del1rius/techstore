@@ -93,7 +93,7 @@
                     <td>#{{ order.id }}</td>
                     <td>{{ order.user.username }}</td>
                     <td>{{ order.created_at|date:"M d, Y H:i" }}</td>
-                    <td class="price">${{ order.total_amount }}</td>
+                    <td class="price">R{{ order.total_amount }}</td>
                     <td>{{ order.items.count }} item{{ order.items.count|pluralize }}</td>
                     <td>
                         <button class="btn btn-sm btn-view-details" type="button" data-bs-toggle="collapse"
@@ -119,12 +119,13 @@
                                             <span class="order-detail-value">{{ order.user.email }}</span>
                                         </p>
                                         <p class="order-detail-label">Order Date:
-                                            <span class="order-detail-value">{{ order.created_at|date:"M d, Y H:i" }}</span>
+                                            <span class="order-detail-value">{{ order.created_at|date:"M d, Y H:i"
+                                                }}</span>
                                         </p>
                                     </div>
                                     <div class="col-md-6">
                                         <p class="order-detail-label">Total Amount:
-                                            <span class="price">${{ order.total_amount }}</span>
+                                            <span class="price">R{{ order.total_amount }}</span>
                                         </p>
                                         <p class="order-detail-label">Number of Items:
                                             <span class="order-detail-value">{{ order.items.count }}</span>
@@ -150,8 +151,8 @@
                                         <tr>
                                             <td>{{ item.product.name }}</td>
                                             <td>{{ item.quantity }}</td>
-                                            <td>${{ item.price }}</td>
-                                            <td>${{ item.quantity|multiply:item.price }}</td>
+                                            <td>R{{ item.price }}</td>
+                                            <td>R{{ item.quantity|multiply:item.price }}</td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
@@ -178,11 +179,11 @@
                         <div class="stats-label">Total Orders</div>
                     </div>
                     <div class="col-md-4">
-                        <div class="stats-number">${{ orders|sum_total }}</div>
+                        <div class="stats-number">R{{ orders|sum_total }}</div>
                         <div class="stats-label">Total Revenue</div>
                     </div>
                     <div class="col-md-4">
-                        <div class="stats-number">${{ orders|avg_total }}</div>
+                        <div class="stats-number">R{{ orders|avg_total }}</div>
                         <div class="stats-label">Average Order Value</div>
                     </div>
                 </div>
