@@ -42,7 +42,7 @@
                     <select name="category" class="form-select">
                         <option value="">All Categories</option>
                         {% for category in categories %}
-                        <option value="{{ category.slug }}" {% if current_category==category.slug %}selected{% endif %}>
+                        <option value="{{ category.slug }}" {% if current_category == category.slug %}selected{% endif %}>
                             {{ category.name }}
                         </option>
                         {% endfor %}
@@ -50,11 +50,11 @@
                 </div>
                 <div class="col-md-3">
                     <select name="sort" class="form-select">
-                        <option value="-created_at" {% if sort_by=='-created_at' %}selected{% endif %}>Newest</option>
-                        <option value="price" {% if sort_by=='price' %}selected{% endif %}>Price: Low to High</option>
-                        <option value="-price" {% if sort_by=='-price' %}selected{% endif %}>Price: High to Low</option>
-                        <option value="name" {% if sort_by=='name' %}selected{% endif %}>Name: A-Z</option>
-                        <option value="-name" {% if sort_by=='-name' %}selected{% endif %}>Name: Z-A</option>
+                        <option value="-created_at" {% if sort_by == '-created_at' %}selected{% endif %}>Newest</option>
+                        <option value="price" {% if sort_by == 'price' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="-price" {% if sort_by == '-price' %}selected{% endif %}>Price: High to Low</option>
+                        <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name: A-Z</option>
+                        <option value="-name" {% if sort_by == '-name' %}selected{% endif %}>Name: Z-A</option>
                     </select>
                 </div>
                 <div class="col-md-2">
