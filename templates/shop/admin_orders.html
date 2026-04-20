@@ -120,8 +120,7 @@
                                             <span class="order-detail-value">{{ order.user.email }}</span>
                                         </p>
                                         <p class="order-detail-label">Order Date:
-                                            <span class="order-detail-value">{{ order.created_at|date:"F d, Y H:i:s"
-                                                }}</span>
+                                            <span class="order-detail-value">{{ order.created_at|date:"F d, Y H:i" }}</span>
                                         </p>
                                     </div>
                                     <div class="col-md-6">
@@ -197,5 +196,5 @@
         <i class="fas fa-info-circle"></i> No orders have been placed yet.
     </div>
     {% endif %}
-    </div>
+</div>
 {% endblock %}
