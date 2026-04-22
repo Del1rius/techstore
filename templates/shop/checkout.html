@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout - TechStore{% endblock %}
+
+{% block content %}
+<div style="min-height: calc(100vh - 200px);">
+    <h1 class="mb-4">Checkout</h1>
+
+    <div class="row">
+        <!-- Order Summary -->
+        <div class="col-md-7">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    {% for item in cart.items.all %}
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                        <div class="d-flex align-items-center">
+                            {% if item.product.image_url %}
+                            <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}"
+                                style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px; margin-right: 15px;">
+                            {% else %}
+                            <i class="fas fa-laptop fa-2x me-3" style="color: var(--primary-purple);"></i>
+                            {% endif %}
+                            <div>
+                                <h6 class="mb-0">{{ item.product.name }}</h6>
+                                <small class="text-muted">Quantity: {{ item.quantity }}</small>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <p class="mb-0 price">R{{ item.get_subtotal }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <div class="d-flex justify-content-between mt-3 pt-3 border-top">
+                        <h5>Total:</h5>
+                        <h5 class="price">R{{ cart.get_total }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Details Form -->
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Payment Details</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'process_payment' %}">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="card_name" class="form-label">Cardholder Name</label>
+                            <input type="text" class="form-control" id="card_name" name="card_name"
+                                placeholder="John Doe" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="card_number" class="form-label">Card Number</label>
+                            <input type="text" class="form-control" id="card_number" name="card_number"
+                                placeholder="1234 5678 9012 3456" maxlength="19" required>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="expiry_date" class="form-label">Expiry Date</label>
+                                <input type="text" class="form-control" id="expiry_date" name="expiry_date"
+                                    placeholder="MM/YY" maxlength="5" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="cvv" class="form-label">CVV</label>
+                                <input type="text" class="form-control" id="cvv" name="cvv" placeholder="123"
+                                    maxlength="3" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="billing_address" class="form-label">Billing Address</label>
+                            <textarea class="form-control" id="billing_address" name="billing_address" rows="3"
+                                placeholder="123 Main Street, City, Province, Postal Code" required></textarea>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> This is a demo site. No actual payment will be processed.
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mb-2">
+                            <i class="fas fa-lock"></i> Complete Order
+                        </button>
+                        <a href="{% url 'cart' %}" class="btn btn-secondary w-100">
+                            <i class="fas fa-arrow-left"></i> Back to Cart
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Format card number with spaces
+    document.getElementById('card_number').addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\s/g, '');
+        let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+        e.target.value = formattedValue;
+    });
+
+    // Format expiry date
+    document.getElementById('expiry_date').addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length >= 2) {
+            value = value.slice(0, 2) + '/' + value.slice(2, 4);
+        }
+        e.target.value = value;
+    });
+
+    // Only allow numbers in CVV
+    document.getElementById('cvv').addEventListener('input', function (e) {
+        e.target.value = e.target.value.replace(/\D/g, '');
+    });
+</script>
+{% endblock %}

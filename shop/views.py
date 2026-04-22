@@ -146,6 +146,32 @@ def checkout(request):
         messages.warning(request, 'Your cart is empty!')
         return redirect('cart')
     
+    return render(request, 'shop/checkout.html', {'cart': cart})
+
+
+@login_required
+def process_payment(request):
+    if request.method != 'POST':
+        return redirect('cart')
+    
+    cart = get_object_or_404(Cart, user=request.user)
+    
+    if not cart.items.exists():
+        messages.warning(request, 'Your cart is empty!')
+        return redirect('cart')
+    
+    # Get payment details from form (for demo purposes, we just validate they exist)
+    card_name = request.POST.get('card_name')
+    card_number = request.POST.get('card_number')
+    expiry_date = request.POST.get('expiry_date')
+    cvv = request.POST.get('cvv')
+    billing_address = request.POST.get('billing_address')
+    
+    # Validate all fields are present
+    if not all([card_name, card_number, expiry_date, cvv, billing_address]):
+        messages.error(request, 'Please fill in all payment details.')
+        return redirect('checkout')
+    
     # Create order
     order = Order.objects.create(
         user=request.user,
@@ -166,7 +192,7 @@ def checkout(request):
     # Clear cart
     cart.items.all().delete()
     
-    messages.success(request, f'Order #{order.id} placed successfully!')
+    messages.success(request, f'Order #{order.id} placed successfully! Payment processed.')
     return redirect('home')
 
 
